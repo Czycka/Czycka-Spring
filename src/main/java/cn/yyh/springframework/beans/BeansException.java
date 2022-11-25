@@ -6,7 +6,7 @@ package cn.yyh.springframework.beans;
  * @Date 2022/11/23 10:09
  * @Created by 杨耀辉
  */
-public class BeansException extends Throwable {
+public class BeansException extends RuntimeException  {
 
     public BeansException(String msg) {
         super(msg);

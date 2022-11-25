@@ -1,31 +1,21 @@
 package cn.yyh.springframework.test.bean;
 
+import lombok.Data;
+
 /**
  * @Description 用于测试的 bean
  * @Classname UserService
  * @Date 2022/11/23 9:32
  * @Created by 杨耀辉
  */
+@Data
 public class UserService {
 
-    private String name;
+    private String uId;
 
-    public UserService() {
-    }
-
-    public UserService(String name) {
-        this.name = name;
-    }
+    private UserDao userDao;
 
     public void queryUserInfo() {
-        System.out.println("查询用户信息: " + name);
-    }
-
-    @Override
-    public String toString() {
-        final StringBuffer stringBuffer = new StringBuffer("");
-        stringBuffer.append("").append(name);
-        return stringBuffer.toString();
-
+        System.out.println("查询用户信息: " + userDao.queryUserName(uId));
     }
 }
