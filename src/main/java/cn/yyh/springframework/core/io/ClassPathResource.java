@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * @Description TODO
+ * @Description classpath本地资源文件
  * @Classname ClassPathResource
  * @Date 2022/11/25 10:36
  * @Created by 杨耀辉

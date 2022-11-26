@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public interface BeanFactory {
 
     // 获取 Bean 对象
-    public Object getBean(String name) throws BeansException;
-    public Object getBean(String name,Object...args) throws BeansException;
+    Object getBean(String name) throws BeansException;
+    Object getBean(String name,Object...args) throws BeansException;
+    <T> T getBean(String name, Class<T> requiredType) throws BeansException;
 }

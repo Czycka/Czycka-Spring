@@ -8,6 +8,7 @@ import cn.yyh.springframework.beans.factory.config.BeanDefinition;
 import cn.yyh.springframework.beans.factory.config.BeanReference;
 import cn.yyh.springframework.beans.factory.support.DefaultListableBeanFactory;
 import cn.yyh.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import cn.yyh.springframework.context.support.ClassPathXmlApplicationContext;
 import cn.yyh.springframework.core.io.DefaultResourceLoader;
 import cn.yyh.springframework.core.io.Resource;
 import cn.yyh.springframework.test.bean.UserDao;
@@ -51,7 +52,7 @@ public class ApiTest {
     }
 
     @Before
-    public void init(){
+    public void init() {
         resourceLoader = new DefaultResourceLoader();
     }
 
@@ -64,7 +65,7 @@ public class ApiTest {
     }
 
     @Test
-    public void test_file() throws IOException{
+    public void test_file() throws IOException {
         Resource resource = resourceLoader.getResource("src/test/resources/important.properties");
         InputStream inputStream = resource.getInputStream();
         String content = IoUtil.readUtf8(inputStream);
@@ -81,7 +82,7 @@ public class ApiTest {
     }
 
     @Test
-    public void test_xml(){
+    public void test_xml() {
         // 1. 初始化 BeanFactory
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 
@@ -90,7 +91,19 @@ public class ApiTest {
         reader.loadBeanDefinitions("classpath:spring.xml");
 
         // 3. 获取 Bean 对象并调用方法
-        UserService userService = (UserService)beanFactory.getBean("userService", UserService.class);
-        userService.queryUserInfo();
+        UserService userService = (UserService) beanFactory.getBean("userService", UserService.class);
+        String result = userService.queryUserInfo();
+        System.out.println("测试结果: " + result);
+    }
+
+    @Test
+    public void test_xml_application() {
+        // 1. 初始化 BeanFactory
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+
+        // 2. 获取 Bean 对象调用方法
+        UserService userService = applicationContext.getBean("userService", UserService.class);
+        String result = userService.queryUserInfo();
+        System.out.println("测试结果: " + result);
     }
 }

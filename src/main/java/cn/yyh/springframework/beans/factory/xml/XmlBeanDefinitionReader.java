@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * @Description TODO
+ * @Description XML解析器  用于将 XML 中配置的 Bean 注册到 BeanFactory 的注册表内
  * @Classname XmlBeanDefinitionReader
  * @Date 2022/11/25 15:57
  * @Created by 杨耀辉
@@ -46,8 +46,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
     @Override
     public void loadBeanDefinitions(Resource... resources) throws BeansException {
-        for (Resource resource :
-                resources) {
+        for (Resource resource : resources) {
             loadBeanDefinitions(resource);
         }
     }
@@ -59,6 +58,13 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         loadBeanDefinitions(resource);
     }
 
+    @Override
+    public void loadBeanDefinitions(String... locations) throws BeansException {
+        for (String location : locations) {
+            loadBeanDefinitions(location);
+        }
+    }
+
     private void doLoadBeanDefinitions(InputStream inputStream) throws ClassNotFoundException {
 
         Document doc = XmlUtil.readXML(inputStream);
@@ -67,7 +73,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
         for (int i = 0; i < childNodes.getLength(); i++) {
             // 判断元素
-            if (! (childNodes.item(i) instanceof Element)) continue;
+            if (!(childNodes.item(i) instanceof Element)) continue;
             // 判断对象
             if (!"bean".equals(childNodes.item(i).getNodeName())) continue;
 
@@ -101,11 +107,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
                 PropertyValue propertyValue = new PropertyValue(attrName, value);
                 beanDefinition.getPropertyValues().addPropertyValue(propertyValue);
             }
-            if (getRegistry().containsBeanDefinition(beanName)){
-                throw new BeansException("Duplicate beanName["+beanName+"] is not allowed");
+            if (getRegistry().containsBeanDefinition(beanName)) {
+                throw new BeansException("Duplicate beanName[" + beanName + "] is not allowed");
             }
             // 注册 beanDefinition
-            getRegistry().registerBeanDefinition(beanName,beanDefinition);
+            getRegistry().registerBeanDefinition(beanName, beanDefinition);
         }
 
     }
