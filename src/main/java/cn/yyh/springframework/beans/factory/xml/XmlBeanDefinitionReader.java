@@ -6,6 +6,7 @@ import cn.yyh.springframework.beans.BeansException;
 import cn.yyh.springframework.beans.PropertyValue;
 import cn.yyh.springframework.beans.factory.config.BeanDefinition;
 import cn.yyh.springframework.beans.factory.config.BeanReference;
+import cn.yyh.springframework.beans.factory.config.ConfigurableBeanFactory;
 import cn.yyh.springframework.beans.factory.support.AbstractBeanDefinitionReader;
 import cn.yyh.springframework.beans.factory.support.BeanDefinitionRegistry;
 import cn.yyh.springframework.core.io.Resource;
@@ -73,29 +74,51 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
         for (int i = 0; i < childNodes.getLength(); i++) {
             // 判断元素
-            if (!(childNodes.item(i) instanceof Element)) continue;
+            if (!(childNodes.item(i) instanceof Element)) {
+                continue;
+            }
             // 判断对象
-            if (!"bean".equals(childNodes.item(i).getNodeName())) continue;
+            if (!"bean".equals(childNodes.item(i).getNodeName())) {
+                continue;
+            }
 
             // 解析标签
             Element bean = (Element) childNodes.item(i);
             String id = bean.getAttribute("id");
             String name = bean.getAttribute("name");
             String className = bean.getAttribute("class");
+            String scope = bean.getAttribute("scope");
+
+            // 新增了对 init-method 和 destroy-method 的读取
+            String initMethod = bean.getAttribute("init-method");
+            String destroyMethod = bean.getAttribute("destroy-method");
+
             // 获取 class 方便获取类中的名称
             Class<?> clazz = Class.forName(className);
             // 优先级 id > name
             String beanName = StrUtil.isNotEmpty(id) ? id : name;
+            String beanScope = StrUtil.isEmpty(scope) ? ConfigurableBeanFactory.SCOPE_SINGLETON : scope;
             if (StrUtil.isEmpty(beanName)) {
                 beanName = StrUtil.lowerFirst(clazz.getSimpleName());
             }
 
             // 定义 Bean
             BeanDefinition beanDefinition = new BeanDefinition(clazz);
+
+            beanDefinition.setScope(beanScope);
+
+            // 额外设置到beanDefinition中
+            beanDefinition.setInitMethodName(initMethod);
+            beanDefinition.setDestroyMethodName(destroyMethod);
+
             // 读取属性并填充
             for (int j = 0; j < bean.getChildNodes().getLength(); j++) {
-                if (!(bean.getChildNodes().item(j) instanceof Element)) continue;
-                if (!"property".equals(bean.getChildNodes().item(j).getNodeName())) continue;
+                if (!(bean.getChildNodes().item(j) instanceof Element)) {
+                    continue;
+                }
+                if (!"property".equals(bean.getChildNodes().item(j).getNodeName())) {
+                    continue;
+                }
                 // 解析标签: property
                 Element property = (Element) bean.getChildNodes().item(j);
                 String attrName = property.getAttribute("name");

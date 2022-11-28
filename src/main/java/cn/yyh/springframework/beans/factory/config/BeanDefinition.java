@@ -4,17 +4,22 @@ import cn.yyh.springframework.beans.PropertyValues;
 import lombok.Data;
 
 /**
- * @Description 定义Bean的包装类
- * @Classname BeanDefinition
+ * @author 杨耀辉
  * @Date 2022/11/23 9:13
- * @Created by 杨耀辉
+ * @Description 定义Bean的包装类
  */
 @Data
 public class BeanDefinition {
 
     private Class beanClass;
 
+    private String scope;
+
     private PropertyValues propertyValues;
+
+    private String initMethodName;
+
+    private String destroyMethodName;
 
     public BeanDefinition(Class beanClass) {
         this.beanClass = beanClass;

@@ -7,10 +7,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * @Description 简单实例化
- * @Classname SimpleInstantiationStrategy
+ * @author 杨耀辉
  * @Date 2022/11/23 11:29
- * @Created by 杨耀辉
+ * @Description 简单实例化
  */
 public class SimpleInstantiationStrategy implements InstantiationStrategy{
     @Override

@@ -35,14 +35,17 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     }
 
     protected <T> T doGetBean(final String name, final Object[] args) throws BeansException {
-        Object bean = getSingleton(name);
-        // 判断单例库内是否存在该 Bean
-        if (bean != null) {
-            // 存在则直接返回
-            return (T) bean;
-        }
         // 获取 Bean 的定义类
         BeanDefinition beanDefinition = getBeanDefinition(name);
+        // 判断 scope
+        if (beanDefinition.getScope().equals(ConfigurableBeanFactory.SCOPE_SINGLETON)) {
+            Object bean = (T)getSingleton(name);
+            // 判断单例库内是否存在该 Bean
+            if (bean != null) {
+                // 存在则直接返回
+                return (T) bean;
+            }
+        }
         return (T) createBean(name,beanDefinition,args);
     }
 

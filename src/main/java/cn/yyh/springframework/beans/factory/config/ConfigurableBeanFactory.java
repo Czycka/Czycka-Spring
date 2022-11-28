@@ -3,17 +3,21 @@ package cn.yyh.springframework.beans.factory.config;
 import cn.yyh.springframework.beans.factory.HierarchicalBeanFactory;
 
 /**
- * @Description TODO
- * @Classname ConfigurableBeanFactory
+ * @author 杨耀辉
  * @Date 2022/11/25 16:34
- * @Created by 杨耀辉
+ * @Description TODO
  */
 public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, SingletonBeanRegister {
 
-    String SCOPE_SINGLETON = "singleton";
+    public static String  SCOPE_SINGLETON = "singleton";
 
     String SCOPE_PROTOTYPE = "prototype";
 
     void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
+
+    /**
+     * 销毁单例对象
+     */
+    void destroySingletons();
 
 }
