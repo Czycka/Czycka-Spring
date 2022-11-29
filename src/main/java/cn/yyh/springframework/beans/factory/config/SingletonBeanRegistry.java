@@ -5,7 +5,7 @@ package cn.yyh.springframework.beans.factory.config;
  * @Date 2022/11/23 10:07
  * @Description 单例注册接口
  */
-public interface SingletonBeanRegister {
+public interface SingletonBeanRegistry {
 
     /**
      * 获取单例对象

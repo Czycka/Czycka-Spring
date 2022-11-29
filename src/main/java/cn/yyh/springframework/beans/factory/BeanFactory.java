@@ -7,15 +7,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @Description 用于创建Bean
- * @Classname BeanFactory
+ * @author 杨耀辉
  * @Date 2022/11/23 9:12
- * @Created by 杨耀辉
+ * @Description BeanFactory 的基类
  */
 public interface BeanFactory {
 
-    // 获取 Bean 对象
     Object getBean(String name) throws BeansException;
     Object getBean(String name,Object...args) throws BeansException;
     <T> T getBean(String name, Class<T> requiredType) throws BeansException;
+
 }

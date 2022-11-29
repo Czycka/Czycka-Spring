@@ -1,33 +1,40 @@
 package cn.yyh.springframework.beans.factory.support;
 
 import cn.yyh.springframework.beans.BeansException;
-import cn.yyh.springframework.beans.factory.BeanFactory;
+import cn.yyh.springframework.beans.factory.FactoryBean;
 import cn.yyh.springframework.beans.factory.config.BeanDefinition;
 import cn.yyh.springframework.beans.factory.config.BeanPostProcessor;
 import cn.yyh.springframework.beans.factory.config.ConfigurableBeanFactory;
+import cn.yyh.springframework.utils.ClassUtils;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Description Bean 工厂抽象类
- * @Classname AbstractBeanFactory
+ * @author 杨耀辉
  * @Date 2022/11/23 10:08
- * @Created by 杨耀辉
+ * @Description BeanDefinition 注册表接口
  */
-public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory {
+@Data
+public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport implements ConfigurableBeanFactory {
 
+    /**
+     * 用于解析 bean 类名的 ClassLoader
+     */
+    private ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
     private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
 
     @Override
     public Object getBean(String name) throws BeansException {
-        return doGetBean(name,null);
+        return doGetBean(name, null);
     }
 
     @Override
     public Object getBean(String name, Object... args) throws BeansException {
-        return doGetBean(name,args);
+        return doGetBean(name, args);
     }
+
 
     @Override
     public <T> T getBean(String name, Class<T> requiredType) throws BeansException {
@@ -35,18 +42,26 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     }
 
     protected <T> T doGetBean(final String name, final Object[] args) throws BeansException {
-        // 获取 Bean 的定义类
-        BeanDefinition beanDefinition = getBeanDefinition(name);
-        // 判断 scope
-        if (beanDefinition.getScope().equals(ConfigurableBeanFactory.SCOPE_SINGLETON)) {
-            Object bean = (T)getSingleton(name);
-            // 判断单例库内是否存在该 Bean
-            if (bean != null) {
-                // 存在则直接返回
-                return (T) bean;
-            }
+        Object sharedInstance = getSingleton(name);
+        if (sharedInstance != null) {
+            // 如果是 FactoryBean 则需要调用 FactoryBean#getObject
+            return (T) getObjectForBeanInstance(sharedInstance, name);
         }
-        return (T) createBean(name,beanDefinition,args);
+        BeanDefinition beanDefinition = getBeanDefinition(name);
+        Object bean = createBean(name, beanDefinition, args);
+        return (T) getObjectForBeanInstance(bean, name);
+    }
+
+    private Object getObjectForBeanInstance(Object beanInstance, String beanName) {
+        if (!(beanInstance instanceof FactoryBean)) {
+            return beanInstance;
+        }
+        Object object = getCachedObjectForFactoryBean(beanName);
+        if (object == null) {
+            FactoryBean<?> factoryBean = (FactoryBean<?>) beanInstance;
+            object = getObjectFromFactoryBean(factoryBean, beanName);
+        }
+        return object;
     }
 
     protected abstract BeanDefinition getBeanDefinition(String beanName) throws BeansException;
@@ -62,4 +77,6 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     public List<BeanPostProcessor> getBeanPostProcessors(){
         return this.beanPostProcessors;
     }
+
+
 }

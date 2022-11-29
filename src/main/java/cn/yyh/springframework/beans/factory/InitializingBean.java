@@ -1,10 +1,9 @@
 package cn.yyh.springframework.beans.factory;
 
 /**
- * @Description 初始化方法接口
- * @Classname InitializingBean
+ * @author 杨耀辉
  * @Date 2022/11/28 9:24
- * @Created by 杨耀辉
+ * @Description 初始化方法接口
  */
 public interface InitializingBean {
 

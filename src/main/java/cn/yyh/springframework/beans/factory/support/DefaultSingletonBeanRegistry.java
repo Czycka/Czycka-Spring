@@ -2,19 +2,20 @@ package cn.yyh.springframework.beans.factory.support;
 
 import cn.yyh.springframework.beans.BeansException;
 import cn.yyh.springframework.beans.factory.DisposableBean;
-import cn.yyh.springframework.beans.factory.config.SingletonBeanRegister;
+import cn.yyh.springframework.beans.factory.config.SingletonBeanRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * @Description BeanFactory 单例
- * @Classname DefaultSingletonBeanRegistry
+ * @author 杨耀辉
  * @Date 2022/11/23 10:08
- * @Created by 杨耀辉
+ * @Description BeanFactory 单例
  */
-public class DefaultSingletonBeanRegistry implements SingletonBeanRegister {
+public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
+
+    protected static final Object NULL_OBJECT = new Object();
 
     private Map<String, Object> singletonObjects = new HashMap<>();
 

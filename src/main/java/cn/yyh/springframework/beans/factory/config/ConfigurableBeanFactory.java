@@ -7,7 +7,7 @@ import cn.yyh.springframework.beans.factory.HierarchicalBeanFactory;
  * @Date 2022/11/25 16:34
  * @Description TODO
  */
-public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, SingletonBeanRegister {
+public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, SingletonBeanRegistry {
 
     public static String  SCOPE_SINGLETON = "singleton";
 

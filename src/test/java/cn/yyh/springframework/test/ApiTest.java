@@ -1,6 +1,7 @@
 package cn.yyh.springframework.test;
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.log.Log;
 import cn.yyh.springframework.beans.BeansException;
 import cn.yyh.springframework.beans.PropertyValue;
 import cn.yyh.springframework.beans.PropertyValues;
@@ -106,6 +107,35 @@ public class ApiTest {
         UserService userService1 = applicationContext.getBean("userService", UserService.class);
         UserService userService2 = applicationContext.getBean("userService", UserService.class);
         System.out.println(userService1 == userService2);
+    }
+
+    @Test
+    public void test_xml_aware() {
+        // 1. 初始化 BeanFactory
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        applicationContext.registerShutdownHook();
+
+        // 2. 获取 Bean 对象调用方法
+        UserService userService = applicationContext.getBean("userService", UserService.class);
+        String result = userService.queryUserInfo();
+        System.out.println("测试结果" + result);
+//        System.out.println("ApplicationContextAware：" + userService.getApplicationContext());
+//        System.out.println("BeanFactoryAware：" + userService.getBeanFactory());
+    }
+
+    @Test
+    public void test_prototype() {
+        // 1. 初始化 BeanFactory
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        applicationContext.registerShutdownHook();
+
+        // 2. 获取 Bean 对象调用方法
+        UserService userService01 = applicationContext.getBean("userService", UserService.class);
+        UserService userService02 = applicationContext.getBean("userService", UserService.class);
+
+        // 2. 调用代理方法
+        UserService userService = applicationContext.getBean("userService", UserService.class);
+        System.out.println("测试结果：" + userService.queryUserInfo());
     }
 
 
